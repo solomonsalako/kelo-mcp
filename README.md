@@ -1,10 +1,21 @@
 # kelo-mcp
 
+![tests: 18 passing](https://img.shields.io/badge/tests-18%20passing-brightgreen)
+![runtime deps: 0](https://img.shields.io/badge/runtime%20deps-0-blue)
+![protocol: MCP 2025-06-18](https://img.shields.io/badge/protocol-MCP%202025--06--18-5436DA)
+![licence: MIT](https://img.shields.io/badge/licence-MIT-black)
+
 A small Model Context Protocol server that lets a Claude user ask what their business is owed, who to chase first, and get a chase email drafted in their own voice.
 
 **It cannot send anything.** Every tool either reads or returns a draft. That is a product decision, not an oversight, and [DESIGN.md](DESIGN.md) explains what it costs and what it buys.
 
 Extracted from [Kelo](https://gokelo.com), where it backs a live MCP endpoint. No SDK dependency: the JSON-RPC layer is hand-rolled, about 120 lines, and has no runtime dependencies at all.
+
+![kelo-mcp request flow](architecture.svg)
+
+## What this demonstrates
+
+A marketer who builds. Hand-rolled a spec-compliant MCP protocol layer with no SDK, a stateless HTTP transport with bearer-key auth and per-workspace scoping, a clean injected backend seam, and 18 tests that run against a stub in under a second, then wrote the judgment calls down in [DESIGN.md](DESIGN.md). Stack: TypeScript, Web-standard Request/Response, Vitest.
 
 ## Try it in 30 seconds
 

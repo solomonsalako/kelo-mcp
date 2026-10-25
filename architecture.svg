@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 620" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <!-- white card so it reads on both light and dark GitHub themes -->
+  <rect x="0" y="0" width="880" height="620" rx="14" fill="#ffffff"/>
+  <rect x="0.5" y="0.5" width="879" height="619" rx="14" fill="none" stroke="#e4e4e7"/>
+
+  <text x="40" y="46" font-size="22" font-weight="700" fill="#111">kelo-mcp &#8212; request flow</text>
+  <text x="40" y="70" font-size="13" fill="#52525b">Stateless Streamable-HTTP MCP. Hand-rolled JSON-RPC, no SDK. Six tools, read + draft only.</text>
+
+  <!-- 1. Client -->
+  <rect x="250" y="96" width="380" height="58" rx="10" fill="#f4f4f5" stroke="#111"/>
+  <text x="440" y="122" font-size="15" font-weight="700" fill="#111" text-anchor="middle">Claude / AI agent (MCP client)</text>
+  <text x="440" y="141" font-size="12" fill="#52525b" text-anchor="middle">initialize &#183; tools/list &#183; tools/call &#183; ping &#183; batch</text>
+
+  <!-- arrow -->
+  <line x1="440" y1="154" x2="440" y2="186" stroke="#111" stroke-width="1.5"/>
+  <polygon points="440,192 435,182 445,182" fill="#111"/>
+  <text x="452" y="176" font-size="11.5" fill="#52525b">HTTPS POST &#183; Bearer API key</text>
+
+  <!-- 2. Transport / auth -->
+  <rect x="150" y="192" width="580" height="86" rx="10" fill="#fafafa" stroke="#111"/>
+  <text x="168" y="214" font-size="14" font-weight="700" fill="#111">1 &#183; Transport &amp; auth  —  src/http.ts</text>
+  <text x="168" y="235" font-size="12" fill="#3f3f46">Bearer token &#8594; SHA-256 hash lookup &#8594; revocation check &#8594; resolve workspace</text>
+  <text x="168" y="253" font-size="12" fill="#3f3f46">Scopes every call to that key&#8217;s workspace. Invalid / revoked &#8594; 401.</text>
+  <text x="168" y="271" font-size="12" font-style="italic" fill="#52525b">Web-standard Request/Response &#8594; runs on Next.js, Workers, Deno, Bun, Node 18+.</text>
+
+  <line x1="440" y1="278" x2="440" y2="306" stroke="#111" stroke-width="1.5"/>
+  <polygon points="440,312 435,302 445,302" fill="#111"/>
+
+  <!-- 3. Protocol -->
+  <rect x="150" y="312" width="580" height="86" rx="10" fill="#fafafa" stroke="#111"/>
+  <text x="168" y="334" font-size="14" font-weight="700" fill="#111">2 &#183; Protocol  —  src/protocol.ts  (~123 lines, zero runtime deps)</text>
+  <text x="168" y="355" font-size="12" fill="#3f3f46">Hand-rolled JSON-RPC. Dispatcher is injected, so the protocol knows no product logic.</text>
+  <text x="168" y="373" font-size="12" fill="#3f3f46">Notifications &#8594; silence (202, not 200/[]). Unknown method &#8594; -32601.</text>
+  <text x="168" y="391" font-size="12" fill="#3f3f46">Unknown tool &#8594; isError result, not a protocol error. Client protocol version echoed.</text>
+
+  <line x1="440" y1="398" x2="440" y2="426" stroke="#111" stroke-width="1.5"/>
+  <polygon points="440,432 435,422 445,422" fill="#111"/>
+
+  <!-- 4. Dispatch -->
+  <rect x="150" y="432" width="580" height="64" rx="10" fill="#fafafa" stroke="#111"/>
+  <text x="168" y="454" font-size="14" font-weight="700" fill="#111">3 &#183; Tool dispatch  —  src/backend.ts  (ToolBackend seam)</text>
+  <text x="168" y="475" font-size="12" fill="#3f3f46">get_weekly_number &#183; get_chase_queue &#183; get_customer &#183; draft_chase &#183; get_due_soon &#183; get_insights</text>
+  <text x="168" y="490" font-size="12" font-style="italic" fill="#52525b">Inputs clamped/validated (limit 1..25, sort falls back to priority).</text>
+
+  <line x1="440" y1="496" x2="440" y2="524" stroke="#111" stroke-width="1.5"/>
+  <polygon points="440,530 435,520 445,520" fill="#111"/>
+
+  <!-- 5. Backend -->
+  <rect x="250" y="530" width="380" height="58" rx="10" fill="#f4f4f5" stroke="#111"/>
+  <text x="440" y="556" font-size="15" font-weight="700" fill="#111" text-anchor="middle">ToolBackend implementation</text>
+  <text x="440" y="575" font-size="12" fill="#52525b" text-anchor="middle">demo (in-memory) &#183; or your DB (Kelo: workspace-scoped Postgres)</text>
+
+  <!-- side callouts -->
+  <rect x="650" y="300" width="208" height="54" rx="8" fill="#111"/>
+  <text x="664" y="321" font-size="11.5" font-weight="700" fill="#fff">Tenancy from the key</text>
+  <text x="664" y="338" font-size="10.5" fill="#d4d4d8">No tool takes a workspace arg, so</text>
+  <text x="664" y="350" font-size="10.5" fill="#d4d4d8">prompt injection can&#8217;t reach another&#8217;s data.</text>
+
+  <rect x="650" y="430" width="208" height="54" rx="8" fill="#111"/>
+  <text x="664" y="451" font-size="11.5" font-weight="700" fill="#fff">Read + draft only</text>
+  <text x="664" y="468" font-size="10.5" fill="#d4d4d8">No send/write/delete tool exists;</text>
+  <text x="664" y="480" font-size="10.5" fill="#d4d4d8">a test fails if one is ever added.</text>
+
+  <rect x="22" y="300" width="112" height="184" rx="8" fill="none" stroke="#e4e4e7"/>
+  <text x="78" y="322" font-size="11" font-weight="700" fill="#52525b" text-anchor="middle">18 tests</text>
+  <text x="78" y="340" font-size="10" fill="#71717a" text-anchor="middle">protocol</text>
+  <text x="78" y="353" font-size="10" fill="#71717a" text-anchor="middle">tested with</text>
+  <text x="78" y="366" font-size="10" fill="#71717a" text-anchor="middle">an injected</text>
+  <text x="78" y="379" font-size="10" fill="#71717a" text-anchor="middle">stub, no DB</text>
+  <text x="78" y="402" font-size="10" fill="#71717a" text-anchor="middle">&#8594; sub-second</text>
+</svg>
